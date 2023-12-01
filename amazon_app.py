@@ -341,7 +341,6 @@ def get_sentiment_from_url(url, preprocessed):
     return None
 
 def get_sentiment(roberta_neg, roberta_neu, roberta_pos, threshold=0.1):
-    # Calculate the intensity difference between positive and negative
     intensity = roberta_pos - roberta_neg
     
     # Check if any sentiment is above a certain threshold
@@ -359,9 +358,7 @@ subcategories = load_pickle('sub-subcategory_names.pkl')
 processed_data = extraction()
 
 if menu_selection == "Individual Input":
-    # Use Markdown with a center HTML tag to align the title
     st.markdown("<h1 style='text-align: center;'>Amazon Reviews Sentiment Analysis</h1>", unsafe_allow_html=True)
-    # Inject custom CSS to increase the width of the option menu
     st.markdown("""
                 <style>
                 /* CSS selector for the menu container */
@@ -378,21 +375,18 @@ if menu_selection == "Individual Input":
                 """, unsafe_allow_html=True)
 
     selected = option_menu(
-            menu_title=None,  # required
-            options=["Enter URL", "Enter Reviews Text"],  # required
-            icons=["link", "chat-right-text-fill"],  # optional
-            menu_icon="cast",  # optional
-            default_index=0,  # optional
+            menu_title=None, 
+            options=["Enter URL", "Enter Reviews Text"],
+            icons=["link", "chat-right-text-fill"],  
+            menu_icon="cast",  
+            default_index=0,  
             orientation="horizontal",
         )
     if selected =='Enter URL':
-        # Text input for the URL
         url = st.text_input('Enter the URL of the Amazon Product:', '')
-        # Button to perform analysis
         if st.button('Analyse Sentiment'):
             # Check if the URL is not empty
             if url:
-                # Perform sentiment analysis (replace with your actual function)
                 sentiment_results = get_sentiment_from_url(url, preprocessed=True)
                 st.write(sentiment_results)
                 neg = sentiment_results['roberta_neg'].mean()
@@ -404,7 +398,6 @@ if menu_selection == "Individual Input":
                     'metric': ['roberta_neg', 'roberta_neu', 'roberta_pos'],
                     'value': [neg, neu, pos]
                 })
-                # Display the DataFrame in Streamlit
                 st.dataframe(mean_sentiments_df)
                 st.write('Overall Sentiment:')
                 st.write(f'{overall_sentiment} with intensity {intensity:.4g}')
@@ -424,31 +417,25 @@ if menu_selection == "Individual Input":
                 pos = result['roberta_pos']
                 neu = result['roberta_neu']
                 overall_sentiment, intensity = get_sentiment(neg,neu,pos)
-                # Convert the dictionary to a DataFrame
-                # Convert the string values to floats and then to a DataFrame
                 sentiment_df = pd.DataFrame([(k, float(v)) for k, v in result.items()], columns=['metric', 'value'])
-                # Display the DataFrame in Streamlit
                 st.dataframe(sentiment_df.style.format({'value': '{:.4f}'}))
                 st.write('------------')
                 st.write('Sentiment:')
                 st.write(f'{overall_sentiment} with intensity {intensity:.4g}')
 
 if menu_selection == "Amazon Electronics Dashboard":
-    # Use Markdown with a center HTML tag to align the title
     st.markdown("<h1 style='text-align: center;'>Amazon Electronics Product Application</h1>", unsafe_allow_html=True)
     selected = option_menu(
-            menu_title='Main Menu',  # required
-            options=["Home", "Products", "Sentiment Analysis"],  # required
-            icons=["house", "book", "chat-dots"],  # optional
-            menu_icon="cast",  # optional
-            default_index=0,  # optional
+            menu_title='Main Menu',  
+            options=["Home", "Products", "Sentiment Analysis"],  
+            icons=["house", "book", "chat-dots"],  
+            menu_icon="cast",  
+            default_index=0,  
             orientation="horizontal",
         )
     if selected == 'Home':
-        # Define your text
         text = "Welcome to the Amazon Electronic Products Dashboard"
 
-        # Display it in a bordered box using HTML and CSS
         st.markdown(f"""
             <div style="
                 border: 2px solid #e1e4e8; 
@@ -465,14 +452,12 @@ if menu_selection == "Amazon Electronics Dashboard":
         with col1:
             url = 'https://www.amazon.sg/Buy-Electronics-Online/b/?ie=UTF8&node=6314449051&ref_=nav_cs_electronics'
             if st.button("Amazon Electronics Webpage"):
-                # When the button is clicked, redirect the user to the URL
                 webbrowser.open_new_tab(url)
                 st.markdown(f"Redirecting to [{url}]({url})...")
                 st.experimental_rerun()  
         with col2:
             url = 'https://www.amazon.sg/gp/bestsellers/electronics/ref=zg_bs_nav_electronics_0'
             if st.button('Best Sellers'):
-                # When the button is clicked, redirect the user to the URL
                 webbrowser.open_new_tab(url)
                 st.markdown(f"Redirecting to [{url}]({url})...")
                 st.experimental_rerun()  
@@ -482,7 +467,6 @@ if menu_selection == "Amazon Electronics Dashboard":
                 webbrowser.open_new_tab(url)
                 st.markdown(f"Redirecting to [{url}]({url})...")
                 st.experimental_rerun()  
-        # Use markdown to center content in the columns
         col1.markdown("<style>div.stButton > button:first-child { margin: 0 auto; display: block; }</style>", unsafe_allow_html=True)
         col2.markdown("<style>div.stButton > button:first-child { margin: 0 auto; display: block; }</style>", unsafe_allow_html=True)
         col3.markdown("<style>div.stButton > button:first-child { margin: 0 auto; display: block; }</style>", unsafe_allow_html=True)
@@ -512,16 +496,12 @@ if menu_selection == "Amazon Electronics Dashboard":
 
             # Display DataFrame with a button and an expander placeholder on each row
             for i, row in df_target.iterrows():
-                # Create columns for the select button and the product details
                 cols = st.columns([1, 8])  
                 product_name = f"{row.iloc[0]} {row.iloc[1]}"  
                 
-                # Display the product info
                 cols[1].write(product_name)
                 
-                # Button to select the producy
                 if cols[0].button('Select', key=f"select_{i}"):
-                    # Clear the previous expander if any
                     selected_product_url = row[-1]
                     expanders[i].empty()
 
@@ -535,7 +515,6 @@ if menu_selection == "Amazon Electronics Dashboard":
                             if product_name in product['Name'] and product_name not in seen_products:
                                 # Preventing Duplicated Products
                                 seen_products.add(product_name)
-                                # Convert the dictionary to a DataFrame and transpose it
                                 df_product_info = pd.DataFrame.from_dict(product, orient='index', columns=['Information'])
                                 st.table(df_product_info)
                                 sentiment_df_preprocessed = get_sentiment_from_url(selected_product_url, preprocessed=True)
@@ -546,7 +525,6 @@ if menu_selection == "Amazon Electronics Dashboard":
                                     st.write('------------')
                                     st.write('No Reviews Found for the Product Selected.')
 
-                                # Result from get_mean_of_sentiments function
                                 mean_sentiments_result = get_mean_of_sentiments(sentiment_df_preprocessed)
 
                                 # Check if the result is not None before proceeding
