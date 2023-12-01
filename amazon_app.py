@@ -14,7 +14,6 @@ import json
 import pickle
 
 # Importing Web Page Scrappers
-from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException, ElementNotInteractableException, TimeoutException
 from selenium.webdriver.common.by import By
