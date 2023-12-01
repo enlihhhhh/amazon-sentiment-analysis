@@ -17,9 +17,9 @@ This is a Streamlit web application that displays Sentiment Analysis for Amazon 
 
 ### Recommended Way
 1. Clone GitHub Repo:
-`https://github.com/enlihhhhh/ntu-scse-dashboard`
+`https://github.com/enlihhhhh/amazon-sentiment-analysis`
 2. Install Required Modules
 `pip install -r requirements.txt`
 3. Run the same command in terminal from above
-`streamlit run /amazon_app.py`
+`streamlit run <computer_path>/amazon_app.py`
 
