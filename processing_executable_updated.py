@@ -86,24 +86,6 @@ def get_information():
             continue
     return all_data
 
-
-# def get_information():
-#     directory = r'C:\Users\En Lih\OneDrive - Nanyang Technological University\SC4025 Developing Data Products\Group Project\Processing_Files'
-#     all_data = {}
-#     for filename in os.listdir(directory):
-#         if filename.endswith(".json"):
-#             file_path = os.path.join(directory, filename)
-            
-#             # Open and read the JSON file
-#             with open(file_path, 'r') as file:
-#                 data = json.load(file)
-#                 all_data[os.path.splitext(filename)[0]] = data
-#         else:
-#             continue
-#     return all_data
-
-
-
 def standardising_length(dictionary):
     for name, subcat in dictionary.items():
         # Find the maximum length of items for all keys in the subcategory
